@@ -3,7 +3,8 @@
 fizzbuzz() {
     case $1 in
         +([0-9]))
-        fizzbuzzify $1
+        numbers=($@)
+        fizzbuzzifyOnList ${numbers[@]}
         ;;
         --from | -f)
         case $2 in
@@ -21,8 +22,21 @@ fizzbuzz() {
             ;;
         esac
         ;;
-        --help | -h)
-        echo "You ask for the help prompt"
+        * | --help | -h)
+        echo "fizzbuzz.sh -- Fizzbuzzify one or more integers, or a range of integers"
+        echo "  fizzbuzz <number>..."
+        echo "  fizzbuzz [OPTIONS]"
+        echo ""
+        echo "  -f, --from START"
+        echo "      Fizzbuzzify a range begginning at the START value."
+        echo "      This option must be used with the '--to' option."
+        echo "      Optional. If the END parameter is given, START is valued at 1 by default."
+        echo "  -h, --help"
+        echo "      Display the help."
+        echo "  -t, --to END"
+        echo "      Fizzbuzzify a range ending at the END value."
+        echo "      This option may be used with the '--from' option."
+        echo "      Conditional. This option is required if the '--from' option is used."
         ;;
     esac
 }
@@ -39,7 +53,7 @@ fizzbuzzify() {
 }
 
 fizzbuzzifyOnList() {
-    numbers="${!1}"
+    numbers=("${@}")
     out=""
     for index in ${numbers[@]}
     do
