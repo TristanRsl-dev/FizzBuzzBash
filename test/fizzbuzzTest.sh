@@ -5,6 +5,11 @@ test_should_return_number() {
     assertEquals "1" "${out}"
 }
 
+test_should_return_fizz() {
+    out=`fizzbuzzify 3`
+    assertEquals "Fizz" "${out}"
+}
+
 oneTimeSetUp() {
     . ./src/fizzbuzz.sh
 }
