@@ -10,9 +10,14 @@ test_should_return_fizz() {
     assertEquals "Fizz" "${out}"
 }
 
-test_should_return_Buzz() {
+test_should_return_buzz() {
     out=`fizzbuzzify 5`
     assertEquals "Buzz" "${out}"
+}
+
+test_should_return_fizzbuzz() {
+    out=`fizzbuzzify 15`
+    assertEquals "FizzBuzz" "${out}"
 }
 
 oneTimeSetUp() {
