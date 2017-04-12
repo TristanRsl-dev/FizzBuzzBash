@@ -10,3 +10,13 @@ fizzbuzzify() {
         else echo "$1"
     fi
 }
+
+fizzbuzzifyOnList() {
+    numbers="${!1}"
+    out=""
+    for index in ${numbers[@]}
+    do
+        out="$out`fizzbuzzify $index` "
+    done
+    echo ${out}
+}
