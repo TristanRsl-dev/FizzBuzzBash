@@ -1,17 +1,30 @@
 #!/bin/bash
 
 fizzbuzz() {
-    for arguments in "$@"
-    do
-        case $arguments in
+    case $1 in
+        +([0-9]))
+        fizzbuzzify $1
+        ;;
+        --from | -f)
+        case $2 in
             +([0-9]))
-            fizzbuzzify ${arguments}
-            ;;
-            --help | -h)
-            echo "You ask for the help prompt"
+            case $3 in
+                --to | -t)
+                case $4 in
+                    +([0-9]))
+                    numbers=($(seq $2 $4))
+                    fizzbuzzifyOnList ${numbers[@]}
+                    ;;
+                esac
+                ;;
+            esac
             ;;
         esac
-    done
+        ;;
+        --help | -h)
+        echo "You ask for the help prompt"
+        ;;
+    esac
 }
 
 fizzbuzzify() {
