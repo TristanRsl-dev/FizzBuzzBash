@@ -10,6 +10,11 @@ test_should_return_fizz() {
     assertEquals "Fizz" "${out}"
 }
 
+test_should_return_Buzz() {
+    out=`fizzbuzzify 5`
+    assertEquals "Buzz" "${out}"
+}
+
 oneTimeSetUp() {
     . ./src/fizzbuzz.sh
 }
