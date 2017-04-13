@@ -1,44 +1,61 @@
 #!/bin/bash
 
 fizzbuzz() {
-    case $1 in
-        +([0-9]))
-        numbers=($@)
-        fizzbuzzifyOnList ${numbers[@]}
-        return
-        ;;
-        --from | -f)
-        case $2 in
-            +([0-9]))
-            case $3 in
-                --to | -t)
-                case $4 in
-                    +([0-9]))
-                    numbers=($(seq $2 $4))
-                    fizzbuzzifyOnList ${numbers[@]}
-                    return
-                    ;;
-                esac
+    for argument in "$@"; do
+        shift
+        case "$argument" in
+            "--help")
+                set -- "$@" "-h"
                 ;;
-            esac
-            ;;
+            "--from")
+                set -- "$@" "-f"
+                ;;
+            "--to")
+                set -- "$@" "-t"
+                ;;
+            *)
+                set -- "$@" "$argument"
+                ;;
         esac
-        ;;
-        --to | -t)
-        case $2 in
-            +([0-9]))
-            numbers=($(seq 1 $2))
-            fizzbuzzifyOnList ${numbers[@]}
-            return
-            ;;
+    done
+
+    while getopts "hf:t:" option; do
+        case "$option" in
+            f)
+                from=$OPTARG
+                ;;
+            t)
+                if [ "$from" == "" ]; then
+                    from=1
+                fi
+                to=$OPTARG
+                ;;
+            h)
+                displayHelp
+                exit 0
+                ;;
+            \?)
+                echo "Invalid option: -$OPTARG" >&2
+                exit 1
+                ;;
         esac
-        ;;
-        * | --help | -h)
+    done
+
+    if [ "$from" == "" ] && [ "$to" == "" ]; then
+        numbers=("${@}")
+    elif [ "$to" == "" ]; then
+        displayError "The '--from | -f' command need to be follow by the '--to | -t'"
+        exit 2
+    else
+        numbers=($(seq $from $to))
+    fi
+
+    if [ ${#numbers[@]} == 0 ]; then
         displayHelp
-        return
-        ;;
-    esac
-    displayHelp
+        exit 3
+    else
+        fizzbuzzifyOnList "${numbers[@]}"
+    fi
 }
 
 fizzbuzzify() {
@@ -79,3 +96,9 @@ displayHelp() {
     echo "      Conditional. This option is required if the '--from' option is used."
  
 }
+
+displayError() {
+    echo "Invalid command: $1"
+}
+
+fizzbuzz $@
