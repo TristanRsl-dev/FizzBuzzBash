@@ -30,5 +30,4 @@ oneTimeSetUp() {
     . ./src/fizzbuzz.sh
 }
 
-. /home/tristan/Downloads/shunit2-master/source/2.0/src/shell/shunit2
-
+. ./lib/2.0/src/shell/shunit2
