@@ -7,10 +7,13 @@ autocomplete() {
     previous="${COMP_WORDS[COMP_CWORD-1]}"
     options="--help --from --to -h -f -t"
 
-    if [[ ${current} == -* ]]; then
-        COMPREPLY=($(compgen -W "${options}" -- ${current}))
-        return 0
-    fi
+    case "${previous}" in
+        --from | -f | --to | -t)
+            return
+        ;;
+    esac
+
+    COMPREPLY=($(compgen -W "${options}" -- ${current}))
 }
 
 complete -F autocomplete ./src/fizzbuzz.sh
