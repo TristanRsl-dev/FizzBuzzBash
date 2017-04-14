@@ -1,11 +1,9 @@
 #!/bin/bash
 
-autocomplete() {
-    local current previous options
-    COMPREPLY=()
-    current="${COMP_WORDS[COMP_CWORD]}"
-    previous="${COMP_WORDS[COMP_CWORD-1]}"
-    options=("--from" "-f" "--to" "-t" "--help" "-h")
+_fizzbuzz() {
+    local current="${COMP_WORDS[COMP_CWORD]}" \
+        previous="${COMP_WORDS[COMP_CWORD-1]}" \
+        options="--from -f --to -t --help -h"
 
     case "${previous}" in
         --from | -f | --to | -t)
@@ -13,17 +11,15 @@ autocomplete() {
         ;;
     esac
 
-    if [[ "${COMP_WORDS[*]}" == *"-f"* ]] || [[ "${COMP_WORDS[*]}" == *"--from"* ]]; then
-        unset options[0]
-        unset options[1]
+    if [[ "${COMP_WORDS[*]}" =~ ^.*(-f|--from).*$ ]]; then
+        options=$(echo ${options} | sed -e 's/-f\|--from\|-h\|--help//g')
     fi
 
-    if [[ "${COMP_WORDS[*]}" == *"-t"* ]] || [[ "${COMP_WORDS[*]}" == *"--to"* ]]; then
-        unset options[2]
-        unset options[3]
+    if [[ "${COMP_WORDS[*]}" =~ ^.*(-t|--to).*$ ]]; then
+        options=$(echo ${options} | sed -e 's/-t\|--to\|-h\|--help//g')
     fi
 
-    COMPREPLY=($(compgen -W "${options[*]}" -- ${current}))
+    COMPREPLY=($(compgen -W "$options" -- ${current}))
 }
 
-complete -F autocomplete ./src/fizzbuzz.sh
+complete -F _fizzbuzz fizzbuzz.sh
