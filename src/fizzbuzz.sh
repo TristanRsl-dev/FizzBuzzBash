@@ -1,49 +1,49 @@
 #!/bin/bash
 
 fizzbuzz() {
-    for argument in "$@"; do
+    for argument in "${@}"; do
         shift
-        case "$argument" in
+        case "${argument}" in
             "--help")
-                set -- "$@" "-h"
+                set -- "${@}" "-h"
                 ;;
             "--from")
-                set -- "$@" "-f"
+                set -- "${@}" "-f"
                ;;
             "--to")
-                set -- "$@" "-t"
+                set -- "${@}" "-t"
                 ;;
             *)
-                set -- "$@" "$argument"
+                set -- "${@}" "${argument}"
                 ;;
         esac
     done
 
     while getopts "hf:t:" option; do
-        case "$option" in
+        case "${option}" in
             f)
-                from=$OPTARG
+                from="${OPTARG}"
                 ;;
             t)
-                if [ "$from" == "" ]; then
+                if [ -z "${from}" ]; then
                     from=1
                 fi
-                to=$OPTARG
+                to="${OPTARG}"
                 ;;
             h)
                 displayHelp
                 exit 0
                 ;;
             \?)
-                echo "Invalid option: -$OPTARG" >&2
+                echo "Invalid option: -"${OPTARG}"" >&2
                 exit 1
                 ;;
         esac
     done
 
-    if [ "$from" == "" ] && [ "$to" == "" ]; then
-        numbers=("${@}")
-    elif [ "$to" == "" ]; then
+    if [ -z "$from" ] && [ -z "$to" ]; then
+        numbers=("${arguments}")
+    elif [ -z "$to" ]; then
         displayError "The '--from | -f' command need to be follow by the '--to | -t'"
         exit 2
     else
@@ -59,41 +59,44 @@ fizzbuzz() {
 }
 
 fizzbuzzify() {
-    if (($1 % 3 == 0)) && (($1 % 5 == 0)); then
+    local number="$1"
+
+    if ((${number} % 3 == 0)) && ((${number} % 5 == 0)); then
         echo "FizzBuzz"
-    elif (($1 % 3 == 0)); then
+    elif ((${number} % 3 == 0)); then
         echo "Fizz"
-    elif (($1 % 5 == 0)); then
+    elif ((${number} % 5 == 0)); then
         echo "Buzz"
-        else echo "$1"
+        else echo "${number}"
     fi
 }
 
 fizzbuzzifyOnList() {
-    numbers=("${@}")
-    out=""
-    for index in ${numbers[@]}
+    local numbers=("${@}")
+    local out=""
+    for index in "${numbers[@]}"
     do
         out="$out`fizzbuzzify $index` "
     done
-    echo ${out}
+    echo "${out}"
 }
 
 displayHelp() {
-    echo "fizzbuzz.sh -- Fizzbuzzify one or more integers, or a range of integers"
-    echo "  fizzbuzz <number>..."
-    echo "  fizzbuzz [OPTIONS]"
-    echo ""
-    echo "  -f, --from START"
-    echo "      Fizzbuzzify a range begginning at the START value."
-    echo "      This option must be used with the '--to' option."
-    echo "      Optional. If the END parameter is given, START is valued at 1 by default."
-    echo "  -h, --help"
-    echo "      Display the help."
-    echo "  -t, --to END"
-    echo "      Fizzbuzzify a range ending at the END value."
-    echo "      This option may be used with the '--from' option."
-    echo "      Conditional. This option is required if the '--from' option is used."
+    local scriptname=`basename "$0"`
+    echo -e "${scriptname} -- Fizzbuzzify one or more integers, or a range of integers\n" \
+    "\t${scriptname} <number>...\n" \
+    "\t${scriptname} [OPTIONS]\n" \
+    "\n" \
+    "\t-f, --from START\n" \
+    "\t\tFizzbuzzify a range begginning at the START value.\n" \
+    "\t\tThis option must be used with the '--to' option.\n" \
+    "\t\tOptional. If the END parameter is given, START is valued at 1 by default.\n" \
+    "\t-h, --help\n" \
+    "\t\tDisplay the help.\n" \
+    "\t-t, --to END\n" \
+    "\t\tFizzbuzzify a range ending at the END value.\n" \
+    "\t\tThis option may be used with the '--from' option.\n" \
+    "\t\tConditional. This option is required if the '--from' option is used."
  
 }
 
