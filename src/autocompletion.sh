@@ -19,7 +19,7 @@ _fizzbuzz() {
         options=$(echo ${options} | sed -e 's/-t\|--to\|-h\|--help//g')
     fi
 
-    COMPREPLY=($(compgen -W "$options" -- ${current}))
+    COMPREPLY=($(compgen -W "${options}" -- "${current}"))
 }
 
 complete -F _fizzbuzz fizzbuzz.sh

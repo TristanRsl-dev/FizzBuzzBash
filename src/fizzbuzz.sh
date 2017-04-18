@@ -1,20 +1,20 @@
 #!/bin/bash
 
 fizzbuzz() {
-    for argument in "${@}"; do
+    for argument in "$@"; do
         shift
         case "${argument}" in
             "--help")
-                set -- "${@}" "-h"
+                set -- "$@" "-h"
                 ;;
             "--from")
-                set -- "${@}" "-f"
+                set -- "$@" "-f"
                ;;
             "--to")
-                set -- "${@}" "-t"
+                set -- "$@" "-t"
                 ;;
             *)
-                set -- "${@}" "${argument}"
+                set -- "$@" "$argument"
                 ;;
         esac
     done
@@ -25,7 +25,7 @@ fizzbuzz() {
                 from="${OPTARG}"
                 ;;
             t)
-                if [ -z "${from}" ]; then
+                if [ -z "$from" ]; then
                     from=1
                 fi
                 to="${OPTARG}"
@@ -42,7 +42,7 @@ fizzbuzz() {
     done
 
     if [ -z "$from" ] && [ -z "$to" ]; then
-        numbers=("${arguments}")
+        numbers=("${@}")
     elif [ -z "$to" ]; then
         displayError "The '--from | -f' command need to be follow by the '--to | -t'"
         exit 2
@@ -59,8 +59,7 @@ fizzbuzz() {
 }
 
 fizzbuzzify() {
-    local number="$1"
-
+    local number="${1}"
     if ((${number} % 3 == 0)) && ((${number} % 5 == 0)); then
         echo "FizzBuzz"
     elif ((${number} % 3 == 0)); then
@@ -74,7 +73,7 @@ fizzbuzzify() {
 fizzbuzzifyOnList() {
     local numbers=("${@}")
     local out=""
-    for index in "${numbers[@]}"
+    for index in ${numbers[@]}
     do
         out="$out`fizzbuzzify $index` "
     done
@@ -82,10 +81,10 @@ fizzbuzzifyOnList() {
 }
 
 displayHelp() {
-    local scriptname=`basename "$0"`
-    echo -e "${scriptname} -- Fizzbuzzify one or more integers, or a range of integers\n" \
-    "\t${scriptname} <number>...\n" \
-    "\t${scriptname} [OPTIONS]\n" \
+    local scriptname=`basename "${0}"`
+    echo -e "fizzbuzz.sh -- Fizzbuzzify one or more integers, or a range of integers\n" \
+    "\tfizzbuzz <number>...\n" \
+    "\tfizzbuzz [OPTIONS]\n" \
     "\n" \
     "\t-f, --from START\n" \
     "\t\tFizzbuzzify a range begginning at the START value.\n" \
