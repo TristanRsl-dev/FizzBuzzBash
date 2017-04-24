@@ -1,1 +1,1 @@
-FizzBuzz in bash language uses TDD.
+FizzBuzz in bash language using TDD.
